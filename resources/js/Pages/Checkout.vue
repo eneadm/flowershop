@@ -1,7 +1,7 @@
 <template>
     <web-layout>
         <div class="container mx-auto px-6">
-            <template v-if="products">
+            <template v-if="products.length">
                 <h3 class="text-gray-600 text-2xl font-medium">Checkout:</h3>
                 <div class="flex justify-between items-center mt-6 pt-6" v-for="(product, index) in products" :key="index" :class="{ 'border-t' : index > 0 }">
                     <div class="flex items-center">
@@ -57,6 +57,10 @@
             },
 
             total() {
+                if (! this.products.length) {
+                    return 0
+                }
+
                 return this.products.map(product => {
                     return product.price * product.quantity
                 }).reduce((a, b) => a + b)

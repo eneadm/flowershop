@@ -42,7 +42,7 @@ class BasketController extends Controller
             return $item['id'] !== $product['id'];
         });
 
-        $request->session()->put('basket', $products);
+        $request->session()->put('basket', $products->toArray());
 
         return redirect()->route('checkout.index');
     }

@@ -14,7 +14,7 @@ class CheckoutController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Checkout', [
-            'products' => $request->session()->get('basket')
+            'products' => $request->session()->get('basket') ?: []
         ]);
     }
 
@@ -32,7 +32,7 @@ class CheckoutController extends Controller
             $order->items()->create([
                 'title' => $product->title,
                 'description' => $product->description,
-                'quantity' => $basket->firstWhere('id', $product->id)->quanity ?? 1,
+                'quantity' => $basket->firstWhere('id', $product->id)['quantity'] ?? 1,
                 'price' => $product->price,
             ]);
         }
@@ -40,7 +40,7 @@ class CheckoutController extends Controller
         $request->session()->forget('basket');
 
         return redirect()->route('homepage')->with('flash', [
-            'message' => 'Thank you for your order.'
+            'message' => 'Thank you for using FLOWERSHOP, we will notify you when the order is shipped.'
         ]);
     }
 }

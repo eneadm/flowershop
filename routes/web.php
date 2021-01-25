@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BasketController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CustomersController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomepageController;
 use App\Http\Controllers\OrdersController;
@@ -40,5 +41,8 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::apiResource('/products', ProductsController::class);
 
     // Orders...
-    Route::apiResource('/orders', OrdersController::class);
+    Route::apiResource('/orders', OrdersController::class)->except(['store', 'destroy']);
+
+    // Customers...
+    Route::apiResource('/customers', CustomersController::class);
 });
