@@ -2,62 +2,73 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class ProductsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    public function index(): Response
     {
-        //
+        return Inertia::render('Products/Index', [
+            'products' => Product::latest()->get(),
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'price' => 'required|numeric',
+        ]);
+
+        $product = new Product($request->only('title', 'description', 'price'));
+
+        if ($request->exists('image')) {
+            $product->image = str_replace('public/', '', $request->file('image')->store('public'));
+        }
+
+        $product->save();
+
+        return redirect()->route('products.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function create(): Response
     {
-        //
+        return Inertia::render('Products/Create');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function show(Product $product): Response
     {
-        //
+        return Inertia::render('Products/Show', [
+            'product' => $product,
+        ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function update(Request $request, Product $product): RedirectResponse
     {
-        //
+        $request->validate([
+            'title' => 'required',
+            'image' => 'nullable|image|mimes:jpg,png,jpeg|max:2048',
+            'price' => 'required|numeric',
+        ]);
+
+        if ($request->exists('image')) {
+            $product->image = str_replace('public/', '', $request->file('image')->store('public'));
+        }
+
+        $product->update($request->only('title', 'description', 'price'));
+
+        return redirect()->route('products.index');
+    }
+
+    public function destroy(Product $product): RedirectResponse
+    {
+        $product->delete();
+
+        return redirect()->route('products.index');
     }
 }

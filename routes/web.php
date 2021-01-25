@@ -30,7 +30,7 @@ Route::middleware(['auth:sanctum', 'role:*'])->group(function () {
     Route::delete('/basket/{product}', [BasketController::class, 'destroy'])->name('basket.destroy');
 
     // Checkout...
-    Route::apiResource('/checkout', CheckoutController::class)->only(['index', 'store']);
+    Route::resource('/checkout', CheckoutController::class)->only(['index', 'store']);
 });
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
@@ -38,11 +38,11 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
 
     // Products...
-    Route::apiResource('/products', ProductsController::class);
+    Route::resource('/products', ProductsController::class)->except('edit');
 
     // Orders...
-    Route::apiResource('/orders', OrdersController::class)->except(['store', 'destroy']);
+    Route::resource('/orders', OrdersController::class)->except(['store', 'destroy']);
 
     // Customers...
-    Route::apiResource('/customers', CustomersController::class);
+    Route::resource('/customers', CustomersController::class)->only('index');
 });
