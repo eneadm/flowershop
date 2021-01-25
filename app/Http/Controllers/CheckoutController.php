@@ -14,7 +14,7 @@ class CheckoutController extends Controller
     public function index(Request $request): Response
     {
         return Inertia::render('Checkout', [
-            'products' => $request->session()->get('basket') ?: []
+            'products' => collect($request->session()->get('basket'))->values()->toArray()
         ]);
     }
 
