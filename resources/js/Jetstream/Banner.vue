@@ -15,6 +15,7 @@
                         </span>
 
                         <p class="ml-3 font-medium text-sm text-white truncate">
+                            asdasd
                             {{ message }}
                         </p>
                     </div>

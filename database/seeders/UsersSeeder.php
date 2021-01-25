@@ -7,7 +7,7 @@ use App\Models\TeamInvitation;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
-class CreateTestUsers extends Seeder
+class UsersSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -34,12 +34,10 @@ class CreateTestUsers extends Seeder
             'personal_team' => false,
         ]);
 
-        $admin->switchTeam($team);
-
         $team->users()->save($admin, ['role' => 'admin']);
-
         $team->users()->save($customer, ['role' => 'customer']);
 
-
+        $admin->switchTeam($team);
+        $customer->switchTeam($team);
     }
 }
